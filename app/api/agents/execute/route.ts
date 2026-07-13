@@ -52,7 +52,7 @@ export async function POST(req: Request) {
           where: { id: task.id },
           data: {
             status: "failed",
-            error: err instanceof Error ? err.message : "Unknown error",
+            error: err instanceof Error ? err.message : "Unexpected execution failure — check server logs",
             completedAt: new Date(),
           },
         })
