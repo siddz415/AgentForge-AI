@@ -1,11 +1,16 @@
 import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/auth"
-import { prisma } from "@/lib/db"
-import { createAgent } from "@/lib/agents/agent-factory"
-import { AGENT_CONFIGS } from "@/lib/agents/agent-config"
+
+export const runtime = "nodejs"
+export const dynamic = "force-dynamic"
 
 export async function POST(req: Request) {
+  const [{ authOptions }, { prisma }, { AGENT_CONFIGS }] = await Promise.all([
+    import("@/lib/auth"),
+    import("@/lib/db"),
+    import("@/lib/agents/agent-config"),
+  ])
+
   const session = await getServerSession(authOptions)
 
   if (!session?.user) {
@@ -67,7 +72,11 @@ export async function POST(req: Request) {
 }
 
 async function runAgentTask(taskId: string, agentType: string, goal: string) {
+  const { prisma } = await import("@/lib/db")
+
   try {
+    const { createAgent } = await import("@/lib/agents/agent-factory")
+
     const agent = createAgent(agentType, async (progress) => {
       await prisma.task
         .update({
