@@ -37,7 +37,6 @@
     "recharts": "^3.9.2",
     "tailwind-merge": "^3.6.0",
     "tailwindcss-animate": "^1.0.7",
-    "tavily": "^2.0.0",
     "uuid": "^14.0.1"
   },
   "devDependencies": {
